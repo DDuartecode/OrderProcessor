@@ -6,8 +6,8 @@ use DateTime;
 
 class ProductOrderEntity
 {
-    private string $order_id;
-    private string $product_id;
+    private string $orderId;
+    private string $productId;
     private int $quantity;
     private float $price;
     private ?DateTime $createdAt;
@@ -15,17 +15,22 @@ class ProductOrderEntity
 
     public function __construct() 
     {
-        $this->order_id = '';
-        $this->product_id = '';
+        $this->orderId = '';
+        $this->productId = '';
         $this->quantity = 0;
         $this->price = 0.0;
         $this->createdAt = null;
         $this->updatedAt = null;
     }
 
+    public function setOrderId(string $orderId)
+    {
+        $this->orderId = $orderId;
+    }
+
     public function isValid(): bool
     {
-        if (empty($this->id)) {
+        if (empty($this->productId)) {
             throw new \InvalidArgumentException('Product ID cannot be empty.');
         }
 
@@ -42,8 +47,8 @@ class ProductOrderEntity
 
     public function fromArray(array $array, DateTime $date): self
     {
-        $this->order_id = $array['OrderId'] ?? '';
-        $this->product_id = $array['ProductId'] ?? '';
+        $this->orderId = $array['OrderId'] ?? '';
+        $this->productId = $array['ProductId'] ?? '';
         $this->quantity = $array['Quantity'] ?? 0;
         $this->price = $array['Price'] ?? 0.0;
         $this->createdAt = !empty($array['CreatedAt']) ? new DateTime($array['CreatedAt']) : $date;
@@ -55,8 +60,8 @@ class ProductOrderEntity
     public function toArray(): array
     {
         return [
-            'OrderId' => $this->order_id,
-            'ProductId' => $this->product_id,
+            'OrderId' => $this->orderId,
+            'ProductId' => $this->productId,
             'Quantity' => $this->quantity,
             'Price' => $this->price,
             'CreatedAt' => $this->createdAt ? $this->createdAt->format(DateTime::ATOM) : null,
@@ -64,11 +69,11 @@ class ProductOrderEntity
         ];
     }
 
-    public function toInsert(string $order_id): array
+    public function toInsert(): array
     {
         return [
-            'order_id' => $order_id,
-            'product_id' => $this->product_id,
+            'order_id' => $this->orderId,
+            'product_id' => $this->productId,
             'quantity' => $this->quantity,
             'price' => $this->price,
             'created_at' => $this->createdAt->format('Y-m-d H:i:s'),

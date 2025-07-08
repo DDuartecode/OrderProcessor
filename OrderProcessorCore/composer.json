@@ -10,9 +10,17 @@
         }
     },
     "autoload-dev": {   
+        "psr-4": {
+            "OrderProcessorCore\\Tests\\" : [
+                "./tests"
+            ]
+        }
     },
     "require": {
         "php": "^8.2",
         "ramsey/uuid": "^4.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
     }
 }

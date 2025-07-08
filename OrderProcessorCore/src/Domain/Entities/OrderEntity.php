@@ -28,6 +28,28 @@ class OrderEntity
         $this->updatedAt = null;
     }
 
+    public function isValid(): bool
+    {
+        if (empty($this->id)) {
+            throw new \InvalidArgumentException('Order ID cannot be empty.');
+        }
+
+        if (empty($this->products)) {
+            throw new \InvalidArgumentException('Order must contain at least one product.');
+        }
+
+        foreach ($this->products as $product) {
+            $product->setOrderId($this->id);
+            $product->isValid();
+        }
+
+        if($this->totalAmount <= 0) {
+            throw new \InvalidArgumentException('Total amount must be greater than zero.');
+        }
+
+        return true;
+    }
+
     private function setProducts(array $products, DateTime $date ): array
     {
         return array_map(function ($product) use ($date) {
@@ -40,19 +62,6 @@ class OrderEntity
         return array_map(function ($product) {
             return $product->toArray();
         }, $this->products);
-    }
-
-    public function isValid(): bool
-    {
-        if (empty($this->id)) {
-            throw new \InvalidArgumentException('Order ID cannot be empty.');
-        }
-
-        if (empty($this->products)) {
-            throw new \InvalidArgumentException('Order must contain at least one product.');
-        }
-
-        return true;
     }
 
     public function fromArray(array $array): Self
@@ -96,7 +105,7 @@ class OrderEntity
     public function getProductsToInsert(): array
     {
         return array_map(function ($product){
-            return $product->toInsert($this->id);
+            return $product->toInsert();
         }, $this->products);
     }
 
