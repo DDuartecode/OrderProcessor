@@ -87,7 +87,7 @@ return [
                 'queue' => [
                     'name' => env('RABBITMQ_QUEUE', 'default'),
                     'declare' => true,
-                    'job' => \App\Jobs\ProcessOrder::class,                    
+                    'job' => \App\Jobs\RabbitMQJob::class,                     
                 ],
                 'exchange' => [
                     'name' => '',
@@ -95,7 +95,7 @@ return [
                     'declare' => false,
                 ],
                 'routing_key' => env('RABBITMQ_QUEUE', 'generic'),
-            ],
+            ]
         ],
     ],
 

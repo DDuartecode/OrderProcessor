@@ -1,0 +1,18 @@
+{
+    "autoload": {
+        "psr-4": {
+            "OrderProcessorCore\\App\\": [
+                "src/App"
+            ],
+            "OrderProcessorCore\\Domain\\": [
+                "src/Domain"
+            ]
+        }
+    },
+    "autoload-dev": {   
+    },
+    "require": {
+        "php": "^8.2",
+        "ramsey/uuid": "^4.9"
+    }
+}
