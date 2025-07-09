@@ -19,4 +19,16 @@ class Product extends Model
         'description',
         'price',
     ];
+
+    public function productOrders()
+    {
+        return $this->hasMany(ProductOrder::class);
+    } 
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'products_orders')
+                    ->withPivot('quantity', 'price')
+                    ->withTimestamps();
+    }
 }

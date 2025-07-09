@@ -102,6 +102,11 @@ class OrderEntity
         ];
     }
 
+    public function fromDB(array $order): Self
+    {
+        return $this;
+    }
+
     public function getProductsToInsert(): array
     {
         return array_map(function ($product){

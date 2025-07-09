@@ -18,4 +18,16 @@ class Order extends Model
         'status',
         'total_amount',
     ];
+
+    public function productOrders()
+    {
+        return $this->hasMany(ProductOrder::class);
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'products_orders')
+                    ->withPivot('quantity', 'price')
+                    ->withTimestamps();
+    }
 }

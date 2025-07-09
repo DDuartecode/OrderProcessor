@@ -48,22 +48,9 @@ class OrderRepository implements IOrderRepository
 
 	public function getAllOrders(): array
 	{
-		return [
-            (new OrderEntity())->fromArray([
-                'Id' => '1',
-                'Products' => ['Product1', 'Product2'],
-                'OrderDate' => '2023-10-01 12:00:00',
-                'TotalAmount' => 100.0,
-                'Status' => 'Pending'
-            ]),
-            (new OrderEntity())->fromArray([
-                'Id' => '2',
-                'Products' => ['Product3'],
-                'OrderDate' => '2023-10-02 14:30:00',
-                'TotalAmount' => 50.0,
-                'Status' => 'Completed'
-            ])
-        ];
+        $orders = Order::with('productOrders.product')->get();
+
+        return $orders->toArray();
 	}
 
 	public function updateOrder($order): bool
