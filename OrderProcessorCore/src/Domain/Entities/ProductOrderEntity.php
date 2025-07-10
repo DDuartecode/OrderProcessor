@@ -69,6 +69,18 @@ class ProductOrderEntity
         ];
     }
 
+    public function fromDB(array $array, DateTime $date): Self
+    {
+        $this->orderId = $array['order_id'] ?? '';
+        $this->productId = $array['product_id'] ?? '';
+        $this->quantity = $array['quantity'] ?? 0;
+        $this->price = $array['price'] ?? 0.0;
+        $this->createdAt = !empty($array['created_at']) ? new DateTime($array['created_at']) : $date;
+        $this->updatedAt = !empty($array['updated_at']) ? new DateTime($array['updated_at']) : $date;  
+
+        return $this;
+    }
+
     public function toInsert(): array
     {
         return [

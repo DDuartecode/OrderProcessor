@@ -27,34 +27,46 @@ class OrderRepository implements IOrderRepository
         } catch (\Exception $e) {
             DB::rollBack();
 
-            Log::error('Error saving order: ' . $e->getMessage(), [
+            Log::error('DB Error saving order: ' . $e->getMessage(), [
                 'order' => $order->toArray(),
                 'exception' => $e
             ]);
-            return false;
+            throw $e;
         }
 	}
 
 	public function getOrderById($id) : ?OrderEntity
 	{
-		return (new OrderEntity())->fromArray([
-            'Id' => $id,
-            'Products' => [],
-            'OrderDate' => '2023-10-01 12:00:00',
-            'TotalAmount' => 100.0,
-            'Status' => 'Pending'
-        ]);
+		return new OrderEntity();
 	}
 
+    /**
+     * @return OrderEntity[]
+     */
 	public function getAllOrders(): array
 	{
-        $orders = Order::with('productOrders.product')->get();
+        try {
+            $orders = Order::with('productOrders.product')->get();
 
-        return $orders->toArray();
+            if(!empty($orders)) {
+                $orders = $orders->toArray();
+                
+                return array_map(function($order) {
+                    return (new OrderEntity())->fromDB($order);
+                }, $orders);
+            }
+
+            return [];
+        } catch (\Exception $e) {
+            Log::error('DB Error list orders: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
+            throw $e;
+        }
 	}
 
 	public function updateOrder($order): bool
 	{
-		return true; // TODO: Implement updateOrder() method.
+		return true;
 	}
 }

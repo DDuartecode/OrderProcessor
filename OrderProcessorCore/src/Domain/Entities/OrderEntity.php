@@ -50,6 +50,7 @@ class OrderEntity
         return true;
     }
 
+    #region array
     private function setProducts(array $products, DateTime $date ): array
     {
         return array_map(function ($product) use ($date) {
@@ -90,6 +91,15 @@ class OrderEntity
             'UpdatedAt' => $this->updatedAt ? $this->updatedAt->format(DateTime::ATOM) : null,
         ];
     }
+    #endregion
+
+    #region DB
+    private function setProductsFromDB(array $products, DateTime $date ): array
+    {
+        return array_map(function ($product) use ($date) {
+            return (new ProductOrderEntity())->fromDB($product, $date);
+        }, $products);
+    }
 
     public function getOrderToInsert(): array
     {
@@ -102,8 +112,16 @@ class OrderEntity
         ];
     }
 
-    public function fromDB(array $order): Self
+    public function fromDB(array $array): Self
     {
+        $date = new DateTime();
+
+        $this->id = $array['id'] ?? '';
+        $this->status = !empty($array['Status']) ? OrderStatus::map($array['Status']) : OrderStatus::Pending;
+        $this->totalAmount = $array['total_amount'] ?? 0.0;
+        $this->createdAt = !empty($array['created_at']) ? new DateTime($array['created_at']) : $date;
+        $this->updatedAt = !empty($array['updated_at']) ? new DateTime($array['updated_at']) : $date;
+        $this->products = $array['product_orders'] ? $this->setProductsFromDB($array['product_orders'], $date) : [];
         return $this;
     }
 
@@ -113,6 +131,8 @@ class OrderEntity
             return $product->toInsert();
         }, $this->products);
     }
+    #endregion
+
 
     public function setStatus(OrderStatus $status): Self
     {

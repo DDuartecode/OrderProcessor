@@ -23,7 +23,9 @@ class ListOrderUseCase
 
         if(!empty($listOrder)) {
             return array_map(function($order) {
-                return (new OrderEntity)->fromDB($order);
+                $order->isValid();
+
+                return $order;
             }, $listOrder);
         }
 

@@ -11,10 +11,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(
-            'OrderProcessorCore\Domain\Interfaces\IOrderRepository',
-            'App\Infra\Repositories\Order\OrderRepository'
-        );
+        $this->app->bind('OrderProcessorCore\Domain\Interfaces\IOrderRepository', 'App\Infra\Repositories\Order\OrderRepository');
+        $this->app->bind('OrderProcessorCore\Domain\Interfaces\IProductRepository', 'App\Infra\Repositories\Product\ProductRepository');
     }
 
     /**

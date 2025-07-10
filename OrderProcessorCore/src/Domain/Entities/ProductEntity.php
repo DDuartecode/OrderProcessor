@@ -51,12 +51,14 @@ class ProductEntity
 
     public function fromArray(array $array): self
     {
+        $date = new DateTime();
+
         $this->id = $array['Id'] ?? '';
         $this->name = $array['Name'] ?? '';
         $this->description = $array['Description'] ?? null;
         $this->price = $array['Price'] ?? 0.0;
-        $this->createdAt = !empty($array['CreatedAt']) ? new DateTime($array['CreatedAt']) : null;
-        $this->updatedAt = !empty($array['UpdatedAt']) ? new DateTime($array['UpdatedAt']) : null;
+        $this->createdAt = !empty($array['CreatedAt']) ? new DateTime($array['CreatedAt']) : $date;
+        $this->updatedAt = !empty($array['UpdatedAt']) ? new DateTime($array['UpdatedAt']) : $date;
 
         return $this;
     }
@@ -72,4 +74,20 @@ class ProductEntity
             'UpdatedAt' => $this->updatedAt ? $this->updatedAt->format(DateTime::ATOM) : null,
         ];
     }
+
+    #region DB
+    public function fromDB(array $array): Self
+    {
+        $date = new DateTime();
+
+        $this->id = $array['id'] ?? '';
+        $this->name = $array['name'] ?? '';
+        $this->description = $array['description'] ?? null;
+        $this->price = $array['price'] ?? 0.0;
+        $this->createdAt = !empty($array['created_at']) ? new DateTime($array['created_at']) : $date;
+        $this->updatedAt = !empty($array['updated_at']) ? new DateTime($array['updated_at']) : $date;
+
+        return $this;
+    }
+    #regionf
 }
